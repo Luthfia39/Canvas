@@ -6,6 +6,8 @@ import androidx.core.content.res.ResourcesCompat;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Rect mRect = new Rect();
     private Rect mBounds = new Rect();
-//    private static final int OFFSET = 120;
-    private static final int OFFSET = 80;
+    private static final int OFFSET = 120;
+//    private static final int OFFSET = 80;
     private int mOffset = OFFSET;
     private static final int MULTIPLIER = 100;
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
             // jika mentok, maka akan muncul gambar lingkaran
             else {
-                mPaint.setColor(mColorCircle);
+                mPaint.setColor(mColorCircle - MULTIPLIER * mOffset);
                 mCanvas.drawCircle(halfWidth, halfHeight, halfHeight/3, mPaint);
                 String text = getString(R.string.done);
 
@@ -96,6 +98,22 @@ public class MainActivity extends AppCompatActivity {
                 int x = halfWidth - mBounds.centerX();
                 int y = halfHeight - mBounds.centerY();
                 mCanvas.drawText(text, x, y, mPaintText);
+                mOffset += OFFSET;
+
+                mPaint.setColor(mColorBg - MULTIPLIER * mOffset);
+                Point a = new Point(halfWidth-50, halfHeight-50);
+                Point b = new Point(halfWidth+50, halfHeight-50);
+                Point c = new Point(halfWidth, halfHeight+250);
+                Path path = new Path();
+                path.setFillType(Path.FillType.EVEN_ODD);
+                path.lineTo(a.x, a.y);
+                path.lineTo(b.x, b.y);
+                path.lineTo(c.x, c.y);
+                path.lineTo(a.x, a.y);
+                path.close();
+
+                mCanvas.drawPath(path, mPaint);
+                mOffset += OFFSET;
             }
         }
         view.invalidate();
